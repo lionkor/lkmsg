@@ -41,7 +41,7 @@ Use Visual Studio, CLion or other IDE that supports CMake projects.
 3. Build.
 4. The output folder now has the library `.dll` or `.lib` file, which you can link to. `include` should be added to include paths.
 
-## Using lkmsg in your own project
+## Using `lk::msg` in your own project
 
 In general, it is recommended that you `using namespace lk`, if `msg` does not conflict with other namespaces in your project.
 
