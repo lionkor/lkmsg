@@ -17,8 +17,10 @@ private:
     friend Channel;
 
 public:
-    Listener(Channel::Ptr channel, decltype(m_handler) handler = nullptr);
+    Listener(Channel::Ptr channel, decltype(m_handler) handler);
     ~Listener();
+    Listener(const Listener&) = delete;
+    Listener& operator=(const Listener&) = delete;
 };
 
 }

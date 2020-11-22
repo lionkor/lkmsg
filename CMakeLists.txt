@@ -14,6 +14,7 @@ add_library(messages STATIC SHARED
     src/Message.cpp
     src/Listener.cpp
     src/Channel.cpp
+    src/MultiListener.cpp
 )
 
 add_executable(messages-test

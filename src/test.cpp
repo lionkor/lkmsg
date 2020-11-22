@@ -17,10 +17,22 @@ int main() {
         }
     };
 
-    msg::Listener listener(channel, fn);
-    msg::Listener listener2(channel, fn);
+    {
+        msg::Listener listener(channel, fn);
+        msg::Listener listener2(channel, fn);
 
-    msg::Message message(0, std::any("hello"));
+        msg::Message message(0, std::any("hello"));
+
+        channel->send(std::move(message));
+    }
+
+    msg::Channel::Ptr channel2 = msg::Channel::create();
+
+    msg::MultiListener multi_listener({ channel2, channel }, fn);
+
+    msg::Message message(0, std::any("hello from channel 1"));
+    msg::Message message2(0, std::any("hello from channel 2"));
 
     channel->send(std::move(message));
+    channel2->send(std::move(message2));
 }
