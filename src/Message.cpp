@@ -2,6 +2,6 @@
 
 using namespace lk::msg;
 
-Message::Message(Type type, std::any&& data)
-    : type(type)
+Message::Message(int purpose, std::any&& data)
+    : purpose(purpose)
     , data(data) { }

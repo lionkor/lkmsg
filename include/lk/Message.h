@@ -5,14 +5,11 @@
 
 namespace lk::msg {
 
-using Type = int;
-
 struct Message final {
-
-    Type type;
+    int purpose;
     std::any data;
 
-    Message(Type type, std::any&& data);
+    Message(int purpose, std::any&& data);
 };
 
 }
