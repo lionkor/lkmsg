@@ -7,6 +7,11 @@
 
 namespace lk::msg {
 
+/*
+ * A Listener listens to a single channel and calls a callback on each
+ * message received. For Listening to multiple channels at once, use
+ * MultiListener.
+ */
 class Listener final {
 private:
     Channel::Ptr m_channel;

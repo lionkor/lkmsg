@@ -10,6 +10,11 @@
 
 namespace lk::msg {
 
+/*
+ * A MultiListener listens to many channels at the same time.
+ * This is not default behavior of a Listener, since usually channels
+ * dont share common types / conventions.
+ */
 class MultiListener {
     std::stack<Listener> m_listeners;
     std::function<void(Message&)> m_handler;
