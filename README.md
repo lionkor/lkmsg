@@ -68,8 +68,8 @@ my_channel.send(std::move(my_message));
 ```
 Note that the message is moved into `Channel::send()` - this design is important as `lk::msg` is planned to be async later. Further, this clarifies that the channel now owns the message, and once its been sent to every listener, it will be destroyed.
 
-The first argument, `1` in this case, is of type `int`. This is to be used, with an enum instead of a raw `int` for example, to identify what type of message it is.
-Note that, to identify which type is held by the `std::any` member `data`, `std::any::type` can be compared to `typeid(xyz)` to find out whether a cast from `data` to type `xyz` is valid. The `type` member of the Message has nothing to 
-do with this, and is to be used to identify which type the message is. This `type` member of Message is needed because two different message types (like a hello and a goodbye message) could both have a string as data, yet be different kinds of messages which are to be handled differently. In this case, the `std::any::type` is the same, but the `Message::type` is not. 
+The first argument, `1` in this case, is of type `int`. This is to be used, with an enum instead of a raw `int` for example, to identify what type of message it is, i.e. what its purpose is.
+Note that, to identify which type is held by the `std::any` member `data`, `std::any::type` can be compared to `typeid(xyz)` to find out whether a cast from `data` to type `xyz` is valid. This `purpose` member of Message is useful because two different messages (like a hello and a goodbye message) could both have a string as data (i.e. `std::any::type`), yet be different kinds of messages which are to be handled differently. In this case, the `std::any::type` is the same, but the `Message::purpose` is not. 
 
+- MultiListener: A single object managing multiple listeners to multiple channels, receiving all messages in a single handler. Can be used like a normal Listener, but will listen to multiple channels at the same time. If this finds frequent use, then Channels likely have not been used properly, and multiple channels can probably be merged into one. A MultiListener is useful for logging all ongoing messages in the program, but if its used for other things, there is likely an inefficient use of Channels.
 
