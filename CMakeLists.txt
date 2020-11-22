@@ -9,7 +9,15 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE} -O2 -
 
 include_directories("include/lk")
 
-add_library(messages STATIC SHARED
+if (LK_MESSAGES_STATIC)
+    message("building lk::msg as static library")
+    set(BUILD_MESSAGES_AS STATIC)
+else () 
+    message("building lk::msg as shared library (specify LK_MESSAGES_STATIC for static building)")
+    set(BUILD_MESSAGES_AS SHARED)
+endif()
+
+add_library(lkmsg ${BUILD_MESSAGES_AS}
     src/messages.cpp
     src/Message.cpp
     src/Listener.cpp
@@ -21,5 +29,5 @@ add_executable(messages-test
     src/test.cpp
 )
 
-target_link_libraries(messages-test messages)
+target_link_libraries(messages-test lkmsg)
 

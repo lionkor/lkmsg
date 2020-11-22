@@ -10,7 +10,7 @@ int main() {
 
     msg::Channel::Ptr channel = msg::Channel::create();
 
-    auto fn = [&](msg::Message& m) {
+    auto fn = [&](const msg::Message& m) {
         if (m.type == 0) {
             auto val = std::any_cast<const char* const>(m.data);
             std::cout << "rcv: " << val << std::endl;

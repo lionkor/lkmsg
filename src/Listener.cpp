@@ -4,7 +4,7 @@
 
 using namespace lk::msg;
 
-void Listener::receive(Message& m) {
+void Listener::receive(const Message& m) {
     if (m_handler) {
         m_handler(m);
     }
@@ -18,4 +18,8 @@ Listener::Listener(Channel::Ptr channel, decltype(m_handler) handler)
 
 Listener::~Listener() {
     m_channel->remove_listener(this);
+}
+
+void Listener::set_handler(decltype(m_handler) new_handler) {
+    m_handler = new_handler;
 }

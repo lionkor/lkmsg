@@ -17,9 +17,9 @@ namespace lk::msg {
  */
 class MultiListener {
     std::stack<Listener> m_listeners;
-    std::function<void(Message&)> m_handler;
+    std::function<void(const Message&)> m_handler;
 
-    void receive(Message& msg);
+    void receive(const Message& msg);
 
 public:
     MultiListener(std::initializer_list<Channel::Ptr>&& list, decltype(m_handler) handler);

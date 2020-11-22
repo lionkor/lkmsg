@@ -15,9 +15,9 @@ namespace lk::msg {
 class Listener final {
 private:
     Channel::Ptr m_channel;
-    std::function<void(Message&)> m_handler;
+    std::function<void(const Message&)> m_handler;
 
-    void receive(Message& m);
+    void receive(const Message& m);
 
     friend Channel;
 
@@ -26,6 +26,8 @@ public:
     ~Listener();
     Listener(const Listener&) = delete;
     Listener& operator=(const Listener&) = delete;
+
+    void set_handler(decltype(m_handler) new_handler);
 };
 
 }
