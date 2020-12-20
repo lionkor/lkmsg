@@ -3,6 +3,13 @@ a message/signal libary for modern C++.
 
 Requires C++ 17.
 
+lk::msg has three different parts: A `Listener`, a `Message` and a `Channel`.
+
+The concept is clear by the pure english meaning of these terms: A listener listens for a message on a channel.
+A message in this case is any object, wrapped within `std::any`, it could even be a lambda. 
+
+A listener has to register to a channel in order to start getting messages. This is handled in an RAII way, as a Listener has to be created with a Channel as an argument, and will automatically register / unregister when created / destroyed respectively. When a message is received, each listener passes the message on to its handler, which is a `std::function` object, assigned on construction. Channels are enforced to be created as `std::shared_ptr`, so that all listeners keep it alive, and a Listener will never listen on a channel that doesn't exist. A Channel can, however, be deactivated by being closed.
+
 # How to use
 
 ## Building
@@ -64,12 +71,37 @@ Note that the constructor takes a `lk::msg::Channel::Ptr` by value. This ensures
 - Message: A lightweight object encoding the type of message (as an `int`), and the message data with `std::any`.
 ```cpp
 lk::msg::Message my_message(1, std::string("Hello, World!"));
-my_channel.send(std::move(my_message));
+bool success = my_channel.send(std::move(my_message));
 ```
-Note that the message is moved into `Channel::send()` - this design is important as `lk::msg` is planned to be async later. Further, this clarifies that the channel now owns the message, and once its been sent to every listener, it will be destroyed.
+Note that the message is moved into `Channel::send()` - this design clarifies that the channel now owns the message, and once its been sent to every listener, it will be destroyed.
 
 The first argument, `1` in this case, is of type `int`. This is to be used, with an enum instead of a raw `int` for example, to identify what type of message it is, i.e. what its purpose is.
 Note that, to identify which type is held by the `std::any` member `data`, `std::any::type` can be compared to `typeid(xyz)` to find out whether a cast from `data` to type `xyz` is valid. This `purpose` member of Message is useful because two different messages (like a hello and a goodbye message) could both have a string as data (i.e. `std::any::type`), yet be different kinds of messages which are to be handled differently. In this case, the `std::any::type` is the same, but the `Message::purpose` is not. 
 
 - MultiListener: A single object managing multiple listeners to multiple channels, receiving all messages in a single handler. Can be used like a normal Listener, but will listen to multiple channels at the same time. If this finds frequent use, then Channels likely have not been used properly, and multiple channels can probably be merged into one. A MultiListener is useful for logging all ongoing messages in the program, but if its used for other things, there is likely an inefficient use of Channels.
 
+### What is a good pattern for Message data?
+
+My favourite way to use this library is to use classes & structs as the data of the Message. Example struct you could pass in a message:
+
+```cpp
+enum MyMessageType {
+    Hello,
+    Update,
+    Goodbye
+};
+
+struct SimpleMessage {
+    Object sender;
+    Object receiver;
+    std::string message;
+};
+// ...
+using namespace lk;
+
+SimpleMessage msg { ... };
+msg::Message hello_message(MessageType::Hello, msg);
+channel->send(std::move(hello_message));
+```
+
+This way, on the receiving end, you can `std::any_cast` it back to a `SimpleMessage`, and thus pass as complex a message as you want. 
