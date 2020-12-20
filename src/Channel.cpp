@@ -23,8 +23,25 @@ Channel::Ptr Channel::create() {
     return Ptr(new Channel);
 }
 
-void Channel::send(Message&& message) {
-    for (auto* listener : m_listeners) {
-        listener->receive(message);
+bool Channel::send(Message&& message) {
+    if (is_open()) {
+        for (auto* listener : m_listeners) {
+            listener->receive(message);
+        }
+        return true;
+    } else {
+        return false;
     }
+}
+
+bool Channel::is_open() const {
+    return m_open;
+}
+
+void Channel::close() {
+    m_open = false;
+}
+
+void Channel::open() {
+    m_open = true;
 }
