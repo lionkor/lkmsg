@@ -13,21 +13,24 @@ namespace lk::msg {
  * MultiListener.
  */
 class Listener final {
+public:
+    using Handler = std::function<void(const Message&)>;
+
 private:
     Channel::Ptr m_channel;
-    std::function<void(const Message&)> m_handler;
+    Handler m_handler;
 
     void receive(const Message& m);
 
     friend Channel;
 
 public:
-    Listener(Channel::Ptr channel, decltype(m_handler) handler);
+    Listener(Channel::Ptr channel, Handler handler);
     ~Listener();
     Listener(const Listener&) = delete;
     Listener& operator=(const Listener&) = delete;
 
-    void set_handler(decltype(m_handler) new_handler);
+    void set_handler(Handler new_handler);
 };
 
 }

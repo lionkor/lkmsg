@@ -8,9 +8,9 @@ void MultiListener::receive(const Message& msg) {
     }
 }
 
-MultiListener::MultiListener(std::initializer_list<Channel::Ptr>&& list, decltype(m_handler) handler)
+MultiListener::MultiListener(std::initializer_list<Channel::Ptr>&& list, Listener::Handler handler)
     : m_handler(handler) {
-    std::function<void(const Message&)> internal_handler = std::bind(&MultiListener::receive, this, std::placeholders::_1);
+    Listener::Handler internal_handler = std::bind(&MultiListener::receive, this, std::placeholders::_1);
     for (auto& channel_ptr : list) {
         m_listeners.emplace(channel_ptr, internal_handler);
     }

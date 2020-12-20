@@ -8,14 +8,14 @@ using namespace lk::msg;
 void Channel::add_listener(Listener* listener) {
     if (listener) {
         m_listeners.insert(listener);
-        std::cout << "added listener " << listener << std::endl;
+        //std::cout << "added listener " << listener << std::endl;
     }
 }
 
 void Channel::remove_listener(Listener* listener) {
     if (listener) {
         m_listeners.erase(listener);
-        std::cout << "removed listener " << listener << std::endl;
+        //std::cout << "removed listener " << listener << std::endl;
     }
 }
 
